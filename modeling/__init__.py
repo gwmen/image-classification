@@ -4,9 +4,20 @@
 @contact: sherlockliao01@gmail.com
 """
 
-from .example_model import ResNet18
+from .baseline import Baseline
+from .teacher_model import get_dino_v3
 
 
-def build_model(cfg):
-    model = ResNet18(cfg.MODEL.NUM_CLASSES)
+def build_model(cfg, num_classes, num_domain=-1):
+    # if cfg.MODEL.NAME == 'resnet50':
+    #     model = Baseline(num_classes, cfg.MODEL.LAST_STRIDE,
+    #     cfg.MODEL.PRETRAIN_PATH, cfg.MODEL.NECK, cfg.TEST.NECK_FEAT)
+    model = Baseline(num_classes, num_domain,
+                     cfg.MODEL.LAST_STRIDE, cfg.MODEL.PRETRAIN_PATH,
+                     cfg.MODEL.NECK, cfg.MODEL.CLIP_ID, cfg.MODEL.IN_PLANES,
+                     cfg.TEST.NECK_FEAT, cfg.MODEL.NAME, cfg.MODEL.PRETRAIN_CHOICE)
     return model
+
+
+def build_teacher_model():
+    return get_dino_v3()

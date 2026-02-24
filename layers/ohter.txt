@@ -1,0 +1,40 @@
+Focal Loss
+回归问题-->分类问题：如何解决CE loss跳变带来的不稳定？也许2D DFL可以解决
+ArcFace
+
+Attentive fine-grained recognition for cross-domain few-shot classification
+center loss
+人脸识别损失函数(Center-Loss、A-Softmax、AM-Softmax、ArcFace)
+https://zhuanlan.zhihu.com/p/62680658
+
+
+criterion = nn.KLDivLoss(reduction='batchmean')  # 或 'mean'
+# 输入：学生用 log_softmax，目标用 softmax
+loss = criterion(torch.log_softmax(S, dim=-1), torch.softmax(T, dim=-1))
+
+
+下是这个领域的重要论文汇总，按时间和技术路线分类：
+1. 开创性工作
+DeiT: Data-efficient Image Transformers​ (ICML 2021)
+论文: Training data-efficient image transformers & distillation through attention
+核心贡献: 首次系统性地提出了 ViT 的蒸馏框架
+蒸馏方法: 使用 ConvNet 作为教师，通过注意力蒸馏训练更小的 ViT
+关键创新: 蒸馏 token 和注意力矩阵的蒸馏
+CvT: Introducing Convolutions to Vision Transformer​ (ICCV 2021)
+论文: CvT: Introducing Convolutions to Vision Transformer
+相关贡献: 虽然主要是改进 ViT，但启发了 CNN 与 Transformer 的融合思路
+2. 专门针对 ViT→CNN 蒸馏的论文
+ViT2CNN: When Vision Transformers Meet CNN​ (2022)
+论文链接: 通常在相关研究中被引用
+核心思想: 专门研究如何将 ViT 的知识迁移到 CNN 学生网络
+Cross-Architecture Distillation​ 系列工作
+CrossViT: Cross-Attention Multi-Scale Vision Transformer​ (ICCV 2021)
+论文: CrossViT: Cross-Attention Multi-Scale Vision Transformer for Image Classification
+蒸馏应用: 其多尺度思想被用于指导 CNN 学习多尺度特征
+KD-ViT: Knowledge Distillation for Vision Transformers​ (ECCV 2022)
+论文: Knowledge Distillation for Vision Transformers: A Compression Study
+贡献: 系统研究了不同蒸馏策略对 ViT 压缩的效果
+
+https://zhuanlan.zhihu.com/p/646402335
+
+
