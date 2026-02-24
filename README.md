@@ -1,7 +1,8 @@
 # PyTorch image classification
 
 A simple structure for image classification with Pytorch Deep Learning project.
-The designed architecture follows this guide [PyTorch-Project-Template](https://github.com/L1aoXingyu/PyTorch-Project-Template), you can check each folder's purpose by yourself.
+The designed architecture follows this guide [PyTorch-Project-Template](https://github.com/L1aoXingyu/PyTorch-Project-Template) and get reference from 
+[reid-strong-baseline](https://github.com/michuanhaohao/reid-strong-baseline) .
 
 
 # Requirements

@@ -68,7 +68,7 @@ def create_supervised_trainer(model, optimizer, loss_fn,
         target = target.to(device) if torch.cuda.device_count() >= 1 else target
 
         score, stu_feat = model(img)
-        loss = loss_fn(score, stu_feat, target)
+        loss = loss_fn(score, target)
         if teacher_model:
             with torch.inference_mode():
                 tea_fea, fea_cls = _infer_teacher(img, teacher_model)
@@ -205,7 +205,5 @@ def do_train(
             logger.info("top_1: {:.2%}".format(top_1))
             logger.info("top_2: {:.2%}".format(top_2))
             logger.info("top_3: {:.2%}".format(top_3))
-            # for r in [1, 5, 10]:
-            #     logger.info("CMC curve, Rank-{:<3}:{:.1%}".format(r, cmc[r - 1]))
 
     trainer.run(train_loader, max_epochs=epochs)

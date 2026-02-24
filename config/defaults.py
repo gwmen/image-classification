@@ -36,7 +36,7 @@ _C.MODEL.NECK = 'bnneck'
 _C.MODEL.IF_WITH_CENTER = 'no'
 # The loss type of metric loss
 # options:['triplet'](without center loss) or ['center','triplet_center'](with center loss)
-_C.MODEL.METRIC_LOSS_TYPE = 'triplet'
+_C.MODEL.METRIC_LOSS_TYPE = 'softmax'
 # For example, if loss type is cross entropy loss + triplet loss + center loss
 # the setting should be: _C.MODEL.METRIC_LOSS_TYPE = 'triplet_center' and _C.MODEL.IF_WITH_CENTER = 'yes'
 
@@ -84,7 +84,7 @@ _C.DATALOADER = CN()
 # Number of data loading threads
 _C.DATALOADER.NUM_WORKERS = 8
 # Sampler for data loading
-_C.DATALOADER.SAMPLER = 'softmax'
+# _C.DATALOADER.SAMPLER = 'softmax'
 # Number of instance for one batch
 _C.DATALOADER.NUM_INSTANCE = 16
 

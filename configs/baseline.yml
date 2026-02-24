@@ -1,10 +1,11 @@
 MODEL:
-  NAME: 'resnet50'
+  NAME: 'resnet18'
   PRETRAIN_CHOICE: 'imagenet'
   PRETRAIN_PATH: ''
   LAST_STRIDE: 2
   NECK: 'no'
-  METRIC_LOSS_TYPE: 'triplet'
+  METRIC_LOSS_TYPE: 'focal-loss'
+#  'focal-loss' 'softmax'
   IF_LABELSMOOTH: 'off'
   IF_WITH_CENTER: 'no'
 #  CLIP_ID:
@@ -21,16 +22,16 @@ INPUT:
   PADDING: 10
 
 DATASETS:
-  NAMES: ['cub_200_2011']
-#  NAMES: [ 'fgvc_aircraft','stanford_dogs','stanford_cars' ,'cub_200_2011']
+  NAMES: [ 'cub_200_2011' ]
+  #  NAMES: [ 'fgvc_aircraft','stanford_dogs','stanford_cars' ,'cub_200_2011']
   #  NAMES: [ 'fgvc_aircraft' ]
   ROOT_DIR: ('./../../dataset')
 
 DATALOADER:
-  #  SAMPLER: 'softmax_triplet'
-  SAMPLER: 'softmax'
   NUM_INSTANCE: 4
   NUM_WORKERS: 1
+
+
 
 SOLVER:
   OPTIMIZER_NAME: 'Adam'

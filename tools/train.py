@@ -16,7 +16,7 @@ from config import cfg
 from data import make_data_loader
 from engine.trainer import do_train
 from modeling import build_model, build_teacher_model
-from layers import make_loss, make_loss_with_center
+from layers import make_loss
 from solver import make_optimizer, make_optimizer_with_center, WarmupMultiStepLR
 
 from utils.logger import setup_logger
@@ -28,7 +28,8 @@ def train(cfg):
 
     # prepare model
     model = build_model(cfg, num_classes, num_domain)
-    teacher_model = build_teacher_model()
+    # teacher_model = build_teacher_model()
+    teacher_model = None
     print(f'class num is : {num_classes}')
     print(f'domain num is : {num_domain}')
     if cfg.MODEL.IF_WITH_CENTER == 'no':
@@ -38,7 +39,8 @@ def train(cfg):
         #                               cfg.SOLVER.WARMUP_ITERS, cfg.SOLVER.WARMUP_METHOD)
 
         loss_func = make_loss(cfg, num_classes)  # modified by gu
-
+        start_epoch = 0
+        scheduler = None
         # Add for using self trained model
         if cfg.MODEL.PRETRAIN_CHOICE == 'self':
             start_step = eval(cfg.MODEL.PRETRAIN_PATH.split('/')[-1].split('.')[0].split('_')[-1].lstrip('0'))

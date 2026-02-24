@@ -7,14 +7,14 @@ import sys
 import torch
 
 sys.path.append('.')
-
+_target = '.cache'
 _py_hash_seed_env = "PYTHONHASHSEED"
 cache_vars = ['HF_HOME', 'HF_HOME', 'HF_DATASETS_CACHE']
 for var in cache_vars:
-    os.environ[var] = './huggingface'
+    os.environ[var] = f'../{_target}/huggingface'
 
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'  # with hf-mirror
-os.environ['TORCH_HOME'] = './torch_hub'
+os.environ['TORCH_HOME'] = f'../{_target}/torch_hub'
 
 
 def seed_everything(seed=1234):
