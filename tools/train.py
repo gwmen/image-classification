@@ -3,10 +3,16 @@
 @author:  sherlock
 @contact: sherlockliao01@gmail.com
 """
+import sys
+import os
+
+# 获取项目根目录路径
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
 from utils.env_set import seed_everything
 import argparse
-import os
-import sys
 
 import torch
 # from torch.backends import cudnn
@@ -80,7 +86,7 @@ def train(cfg):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="ReID Baseline Training")
+    parser = argparse.ArgumentParser(description="Image-classification Baseline Training")
     parser.add_argument(
         "--config_file", default="../configs/baseline.yml", help="path to config file", type=str
     )
