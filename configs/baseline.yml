@@ -15,8 +15,8 @@ MODEL:
 INPUT:
   #  SIZE_TRAIN: [ 256, 128 ]
   #  SIZE_TEST: [ 256, 128 ]
-  SIZE_TRAIN: [ 224, 224 ]
-  SIZE_TEST: [ 224, 224 ]
+  SIZE_TRAIN: [ 384, 384 ]
+  SIZE_TEST: [ 384, 384 ]
   PROB: 0.5 # random horizontal flip
   RE_PROB: 0.0 # random erasing
   PADDING: 10
@@ -55,7 +55,7 @@ SOLVER:
   WEIGHT_DECAY_BIAS: 0.0005
   IMS_PER_BATCH: 20
 
-  STEPS: [ 40, 70 ]
+  STEPS: [ 50, 80 ]
   GAMMA: 0.1
 
   WARMUP_FACTOR: 0.01

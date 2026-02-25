@@ -71,11 +71,12 @@ class Baseline(nn.Module):
         self.gap = nn.AdaptiveAvgPool2d(1)
         self.num_classes = num_classes
         self.classifier = nn.Sequential(
-            nn.Dropout(0.5),
-            nn.Linear(self.in_planes, self.medium_num),
-            nn.ReLU(inplace=True),
-            nn.Dropout(0.3),
-            nn.Linear(self.medium_num, self.num_classes)
+            # nn.Dropout(0.5),
+            # nn.Linear(self.in_planes, self.medium_num),
+            # nn.ReLU(inplace=True),
+            # nn.Dropout(0.3),
+            # nn.Linear(self.medium_num, self.num_classes)
+            nn.Linear(self.in_planes, self.num_classes)
         )
         # self.neck = neck
         # self.neck_feat = neck_feat

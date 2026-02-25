@@ -5,7 +5,7 @@
 """
 
 import torchvision.transforms as T
-
+from PIL import Image
 from .transforms import RandomErasing
 
 
@@ -39,25 +39,34 @@ def build_transforms(cfg, is_train=True):
         #     RandomErasing(probability=cfg.INPUT.RE_PROB, mean=cfg.INPUT.PIXEL_MEAN)
         # ])
         transform = T.Compose([
-            T.Resize((256, 256)),
-            T.RandomRotation(15),
-            T.RandomResizedCrop(cfg.INPUT.SIZE_TRAIN),  # RandomResizedCrop
-            T.RandomHorizontalFlip(0.5),
-            T.ColorJitter(
-                brightness=0.2,
-                contrast=0.2,
-                saturation=.2,
-                hue=.1
-            ),
+            # T.Resize((256, 256)),
+            # T.RandomRotation(15),
+            # T.RandomResizedCrop(cfg.INPUT.SIZE_TRAIN),  # RandomResizedCrop
+            # T.RandomHorizontalFlip(0.5),
+            # T.ColorJitter(
+            #     brightness=0.2,
+            #     contrast=0.2,
+            #     saturation=.2,
+            #     hue=.1
+            # ),
+            # T.ToTensor(),
+            T.Resize((510, 510), Image.BILINEAR),
+            T.RandomCrop(cfg.INPUT.SIZE_TRAIN),
+            T.RandomHorizontalFlip(),
+            T.RandomApply([T.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 5))], p=0.1),
+            T.RandomAdjustSharpness(sharpness_factor=1.5, p=0.1),
             T.ToTensor(),
-            T.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225]
-            )
+            normalize_transform
+            # T.Normalize(
+            #     mean=[0.485, 0.456, 0.406],
+            #     std=[0.229, 0.224, 0.225]
+            # )
         ])
     else:
         transform = T.Compose([
-            T.Resize(cfg.INPUT.SIZE_TEST),
+            T.Resize((510, 510), Image.BILINEAR),
+            T.CenterCrop(cfg.INPUT.SIZE_TEST),
+            # T.Resize(cfg.INPUT.SIZE_TEST),
             T.ToTensor(),
             normalize_transform
         ])
