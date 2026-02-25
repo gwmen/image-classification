@@ -4,5 +4,5 @@
 @contact: sherlockliao01@gmail.com
 """
 
-from .build import make_optimizer, make_optimizer_with_center
+from .build import make_optimizer
 from .lr_scheduler import WarmupMultiStepLR

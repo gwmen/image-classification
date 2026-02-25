@@ -17,7 +17,7 @@ from data import make_data_loader
 from engine.trainer import do_train
 from modeling import build_model, build_teacher_model
 from layers import make_loss
-from solver import make_optimizer, make_optimizer_with_center, WarmupMultiStepLR
+from solver import make_optimizer, WarmupMultiStepLR
 
 from utils.logger import setup_logger
 
@@ -100,7 +100,7 @@ def main():
     if output_dir and not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    logger = setup_logger("fine_grained", output_dir, 0)
+    logger = setup_logger("fine_grained", output_dir, 0, cfg)
     logger.info("Using {} GPUS".format(num_gpus))
     logger.info(args)
 

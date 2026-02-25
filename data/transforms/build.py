@@ -41,7 +41,7 @@ def build_transforms(cfg, is_train=True):
         transform = T.Compose([
             T.Resize((256, 256)),
             T.RandomRotation(15),
-            T.RandomResizedCrop(cfg.INPUT.SIZE_TRAIN),
+            T.RandomResizedCrop(cfg.INPUT.SIZE_TRAIN),  # RandomResizedCrop
             T.RandomHorizontalFlip(0.5),
             T.ColorJitter(
                 brightness=0.2,
