@@ -1,0 +1,78 @@
+MODEL:
+  NAME: 'resnet50'
+  PRETRAIN_CHOICE: 'imagenet'
+  PRETRAIN_PATH: ''
+  LAST_STRIDE: 2
+  NECK: 'no'
+  METRIC_LOSS_TYPE: 'softmax'
+  #  'focal-loss' 'softmax'
+  IF_LABELSMOOTH: 'off'
+  IF_WITH_CENTER: 'no'
+#  CLIP_ID:
+#  IN_PLANES:
+
+
+INPUT:
+  #  SIZE_TRAIN: [ 256, 128 ]
+  #  SIZE_TEST: [ 256, 128 ]
+  SIZE_TRAIN: [ 384, 384 ]
+  SIZE_TEST: [ 384, 384 ]
+  PROB: 0.5 # random horizontal flip
+  RE_PROB: 0.0 # random erasing
+  PADDING: 10
+
+DATASETS:
+  NAMES: [ 'cub_200_2011' ]
+  #  NAMES: [ 'fgvc_aircraft','stanford_dogs','stanford_cars' ,'cub_200_2011']
+  #  NAMES: [ 'fgvc_aircraft' ]
+  ROOT_DIR: ('./../../dataset')
+
+DATALOADER:
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 4
+
+
+
+SOLVER:
+  OPTIMIZER_NAME: 'Adam'
+  #  OPTIMIZER_NAME: 'SGD'
+  MAX_EPOCHS: 300
+  BASE_LR: 0.00035
+
+  CLUSTER_MARGIN: 0.3
+
+  CENTER_LR: 0.5
+  CENTER_LOSS_WEIGHT: 0.0005
+
+  RANGE_K: 2
+  RANGE_MARGIN: 0.3
+  RANGE_ALPHA: 0
+  RANGE_BETA: 1
+  RANGE_LOSS_WEIGHT: 1
+
+  BIAS_LR_FACTOR: 1
+  WEIGHT_DECAY: 0.0005
+  WEIGHT_DECAY_BIAS: 0.0005
+  IMS_PER_BATCH: 80
+
+  STEPS: [ 50, 80 ]
+  GAMMA: 0.1
+
+  WARMUP_FACTOR: 0.01
+  WARMUP_ITERS: 20
+  WARMUP_METHOD: 'linear'
+
+  #  CHECKPOINT_PERIOD: 40 #no use
+  LOG_PERIOD: 20
+  EVAL_PERIOD: 1
+
+TEST:
+  IMS_PER_BATCH: 80
+  RE_RANKING: 'no'
+  WEIGHT: ''
+  NECK_FEAT: 'after'
+  FEAT_NORM: 'yes'
+
+OUTPUT_DIR: "../output/Fine-grained-baseline/resnet50"
+
+
