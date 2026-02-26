@@ -50,6 +50,23 @@ _C.MODEL.IN_PLANES = None
 _C.MODEL.TEACHER = ''
 _C.MODEL.AGG = False  # Aggregation
 # -----------------------------------------------------------------------------
+# PLUG_MODEL
+_C.PLUG_MODEL = CN()
+_C.PLUG_MODEL.ENABLE = True
+_C.PLUG_MODEL.USE_FPN = True
+_C.PLUG_MODEL.FPN_SIZE = 1536
+_C.PLUG_MODEL.USE_SELECTION = True
+_C.PLUG_MODEL.NUM_SELECTS_NAME = ['layer1', 'layer2', 'layer3', 'layer4']
+_C.PLUG_MODEL.NUM_SELECTS_SIZE = [2048, 512, 128, 32]
+
+_C.PLUG_MODEL.USE_COMBINER = True
+_C.PLUG_MODEL.LAMBDA_B = 0.5
+_C.PLUG_MODEL.LAMBDA_S = 0.0
+_C.PLUG_MODEL.LAMBDA_N = 5.0
+_C.PLUG_MODEL.LAMBDA_C = 1.0
+_C.PLUG_MODEL.PROJ_TYPE = "Conv"
+_C.PLUG_MODEL.UP_SAMPLE_TYPE = "Bilinear"
+# -----------------------------------------------------------------------------
 # INPUT
 # -----------------------------------------------------------------------------
 _C.INPUT = CN()

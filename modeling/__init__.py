@@ -15,7 +15,7 @@ def build_model(cfg, num_classes, num_domain=-1):
     model = Baseline(num_classes, num_domain,
                      cfg.MODEL.LAST_STRIDE, cfg.MODEL.PRETRAIN_PATH,
                      cfg.MODEL.NECK, cfg.MODEL.CLIP_ID, cfg.MODEL.IN_PLANES,
-                     cfg.TEST.NECK_FEAT, cfg.MODEL.NAME, cfg.MODEL.PRETRAIN_CHOICE)
+                     cfg.TEST.NECK_FEAT, cfg.MODEL.NAME, cfg)
     return model
 
 

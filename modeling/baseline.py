@@ -8,6 +8,7 @@ from torch import nn
 from torchvision.models.feature_extraction import get_graph_node_names
 from torchvision.models.feature_extraction import create_feature_extractor
 from .backbones.models import create_model
+from .plugin.pim_module import PluginModel
 
 
 def weights_init_kaiming(m):
@@ -62,12 +63,29 @@ class Baseline(nn.Module):
     medium_num = 1024
 
     def __init__(self, num_classes, num_domain, last_stride, model_path, neck, clip_id, in_planes, neck_feat,
-                 model_name,
-                 pretrain_choice):
+                 model_name, cfg):
         super(Baseline, self).__init__()
         backbone = create_model(model_name)
+        return_nodes = NODES[model_name]
         self.in_planes = backbone.fc.in_features
-        self.feature_extractor = create_feature_extractor(backbone, return_nodes=NODES[model_name])
+        self.feature_extractor = create_feature_extractor(backbone, return_nodes=return_nodes)
+        self.shell_extractor = None
+        if cfg.PLUG_MODEL.ENABLE:
+            num_selects = dict()
+            [num_selects.update({layer_name: select_size}) for layer_name, select_size
+             in zip(cfg.PLUG_MODEL.NUM_SELECTS_NAME, cfg.PLUG_MODEL.NUM_SELECTS_SIZE)]
+            self.shell_extractor = PluginModel(backbone=self.feature_extractor,
+                                               return_nodes=return_nodes,
+                                               img_size=cfg.INPUT.SIZE_TRAIN[0],
+                                               use_fpn=cfg.PLUG_MODEL.USE_FPN,
+                                               fpn_size=cfg.PLUG_MODEL.FPN_SIZE,
+                                               proj_type=cfg.PLUG_MODEL.PROJ_TYPE,
+                                               upsample_type=cfg.PLUG_MODEL.UP_SAMPLE_TYPE,
+                                               use_selection=True,
+                                               num_classes=num_classes,
+                                               num_selects=num_selects,
+                                               use_combiner=True,
+                                               comb_proj_size=None)
         self.gap = nn.AdaptiveAvgPool2d(1)
         self.num_classes = num_classes
         self.classifier = nn.Sequential(
@@ -111,14 +129,19 @@ class Baseline(nn.Module):
     #         )
 
     def forward(self, x):
-        extract_features = self.feature_extractor(x)
 
-        last_fea = extract_features['layer4']
-        gap_fea = self.gap(last_fea)  # (b, 2048, 1, 1)
-        reshape_fea = gap_fea.view(gap_fea.shape[0], -1)  # flatten to (bs, 2048)
+        if self.shell_extractor:
+            out = self.shell_extractor(x)
+        else:
+            extract_features = self.feature_extractor(x)
 
-        cls_score = self.classifier(reshape_fea)
-        return cls_score, None  # student feature for distill
+            last_fea = extract_features['layer4']
+            gap_fea = self.gap(last_fea)  # (b, 2048, 1, 1)
+            reshape_fea = gap_fea.view(gap_fea.shape[0], -1)  # flatten to (bs, 2048)
+
+            cls_score = self.classifier(reshape_fea)
+            out = {'comb_outs': cls_score}
+        return out, None  # student feature for distill
 
     def load_param(self, trained_path):
         param_dict = torch.load(trained_path)['model']

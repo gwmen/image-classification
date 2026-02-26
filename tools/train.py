@@ -39,7 +39,7 @@ def train(cfg):
     print(f'class num is : {num_classes}')
     print(f'domain num is : {num_domain}')
     if cfg.MODEL.IF_WITH_CENTER == 'no':
-        print('Train without center loss, the loss type is', cfg.MODEL.METRIC_LOSS_TYPE)
+        # print('Train without center loss, the loss type is', cfg.MODEL.METRIC_LOSS_TYPE)
         optimizer = make_optimizer(cfg, model)
         # scheduler = WarmupMultiStepLR(optimizer, cfg.SOLVER.STEPS, cfg.SOLVER.GAMMA, cfg.SOLVER.WARMUP_FACTOR,
         #                               cfg.SOLVER.WARMUP_ITERS, cfg.SOLVER.WARMUP_METHOD)

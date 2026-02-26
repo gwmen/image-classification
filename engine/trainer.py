@@ -76,7 +76,7 @@ def create_supervised_trainer(model, optimizer, loss_fn,
         loss.backward()
         optimizer.step()
         # compute acc
-        acc = (score.max(1)[1] == target).float().mean()
+        acc = (score["comb_outs"].max(1)[1] == target).float().mean()
         return loss.item(), acc.item()
 
     return Engine(_update)
@@ -109,7 +109,7 @@ def create_supervised_evaluator(model, metrics,
             data = data.to(device) if torch.cuda.device_count() >= 1 else data
             target = target.to(device) if torch.cuda.device_count() >= 1 else target
             predict, _ = model(data)
-            return predict, target
+            return predict["comb_outs"], target
 
     engine = Engine(_inference)
 

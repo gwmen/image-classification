@@ -16,7 +16,8 @@ class AdaptiveFocalLoss(nn.Module):
         self.adaptive_gamma = adaptive_gamma
         self.reduction = reduction
 
-    def forward(self, inputs, targets):
+    def forward(self, score, targets):
+        inputs = score["comb_outs"]
         if self.adaptive_gamma and self.training:
             with torch.no_grad():
                 _, predicted = inputs.max(1)

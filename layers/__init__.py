@@ -9,6 +9,7 @@ import torch.nn.functional as F
 from .triplet_loss import TripletLoss, CrossEntropyLabelSmooth
 from .center_loss import CenterLoss
 from .focal_loss import AdaptiveFocalLoss
+from .plug_in_module_loss import PIMLoss
 
 
 def make_loss(cfg, num_classes):  # modified by gu
@@ -22,11 +23,17 @@ def make_loss(cfg, num_classes):  # modified by gu
     # if cfg.MODEL.IF_LABELSMOOTH == 'on':
     #     xent = CrossEntropyLabelSmooth(num_classes=num_classes)  # new add by luo
     #     print("label smooth on, numclasses:", num_classes)
+
+    if cfg.PLUG_MODEL.ENABLE is True:
+        return PIMLoss(cfg, num_classes)
     loss_func_name = cfg.MODEL.METRIC_LOSS_TYPE
-    loss_func = None
+
     if loss_func_name == 'softmax':
         def loss_func(score, target):  # id loss
-            return F.cross_entropy(score, target)
+            return F.cross_entropy(score["comb_outs"], target)
+
+        return loss_func
+
     if loss_func_name == 'focal-loss':
         return AdaptiveFocalLoss()
         # elif cfg.DATALOADER.SAMPLER == 'triplet':
@@ -45,4 +52,3 @@ def make_loss(cfg, num_classes):  # modified by gu
     # else:
     #     print('expected sampler should be softmax, triplet or softmax_triplet, '
     #           'but got {}'.format(cfg.DATALOADER.SAMPLER))
-    return loss_func
