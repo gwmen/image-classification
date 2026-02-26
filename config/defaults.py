@@ -52,7 +52,7 @@ _C.MODEL.AGG = False  # Aggregation
 # -----------------------------------------------------------------------------
 # PLUG_MODEL
 _C.PLUG_MODEL = CN()
-_C.PLUG_MODEL.ENABLE = True
+_C.PLUG_MODEL.ENABLE = False
 _C.PLUG_MODEL.USE_FPN = True
 _C.PLUG_MODEL.FPN_SIZE = 1536
 _C.PLUG_MODEL.USE_SELECTION = True
