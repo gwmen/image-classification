@@ -307,7 +307,7 @@ class PluginModel(nn.Module):
             integer, features pyramid network projection dimension
         * num_selects:
             num_selects = {
-                # match user-specified in return_nodes
+                # match user-specified in return_nodes  set r = 0.65  better
                 "layer1": 2048,
                 "layer2": 512,
                 "layer3": 128,
