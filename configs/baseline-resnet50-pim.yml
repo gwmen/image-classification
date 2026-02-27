@@ -42,7 +42,7 @@ SOLVER:
   BIAS_LR_FACTOR: 1
   WEIGHT_DECAY: 0.0005
   WEIGHT_DECAY_BIAS: 0.0005
-  IMS_PER_BATCH: 80
+  IMS_PER_BATCH: 24
 
   STEPS: [ 50, 80 ]
   GAMMA: 0.1
@@ -56,12 +56,12 @@ SOLVER:
   EVAL_PERIOD: 1
 
 TEST:
-  IMS_PER_BATCH: 80
+  IMS_PER_BATCH: 24
   RE_RANKING: 'no'
   WEIGHT: ''
   NECK_FEAT: 'after'
   FEAT_NORM: 'yes'
 
-OUTPUT_DIR: "../output/Fine-grained-baseline/resnet50"
+OUTPUT_DIR: "../output/Fine-grained-baseline/resnet50-pim"
 
 

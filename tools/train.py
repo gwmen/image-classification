@@ -88,7 +88,7 @@ def train(cfg):
 def main():
     parser = argparse.ArgumentParser(description="Image-classification Baseline Training")
     parser.add_argument(
-        "--config_file", default="../configs/baseline.yml", help="path to config file", type=str
+        "--config_file", default="../configs/baseline-resnet50-pim.yml", help="path to config file", type=str
     )
     parser.add_argument("opts", help="Modify config options using the command-line", default=None,
                         nargs=argparse.REMAINDER)
