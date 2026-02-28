@@ -10,6 +10,7 @@ from torchvision.models.feature_extraction import create_feature_extractor
 from .backbones.models import create_model
 from .plugin.pim_module import PluginModel
 from .plugin.common_module import ClassificationModel
+from .plugin.fpn_module import FPNClassificationModel
 
 NODES = {
     'resnet50':
@@ -62,7 +63,27 @@ class Baseline(nn.Module):
                                                use_combiner=True,
                                                comb_proj_size=None)
         else:
-            self.shell_extractor = ClassificationModel(feature_extractor, in_planes=in_planes,num_classes=num_classes)
+            if False:
+                self.shell_extractor = ClassificationModel(feature_extractor, in_planes=in_planes,
+                                                           num_classes=num_classes)
+            else:
+                num_selects = dict()
+                [num_selects.update({layer_name: select_size}) for layer_name, select_size
+                 in zip(cfg.PLUG_MODEL.NUM_SELECTS_NAME, cfg.PLUG_MODEL.NUM_SELECTS_SIZE)]
+                self.shell_extractor = FPNClassificationModel(feature_extractor,
+                                                              return_nodes=return_nodes,
+                                                              img_size=cfg.INPUT.SIZE_TRAIN[0],
+                                                              use_fpn=cfg.PLUG_MODEL.USE_FPN,
+                                                              fpn_size=cfg.PLUG_MODEL.FPN_SIZE,
+                                                              proj_type=cfg.PLUG_MODEL.PROJ_TYPE,
+                                                              upsample_type=cfg.PLUG_MODEL.UP_SAMPLE_TYPE,
+                                                              use_selection=True,
+                                                              num_classes=num_classes,
+                                                              num_selects=num_selects,
+                                                              use_combiner=True,
+                                                              comb_proj_size=None,
+                                                              in_planes=in_planes
+                                                              )
 
     def forward(self, x):
         out = self.shell_extractor(x)

@@ -88,7 +88,7 @@ def train(cfg):
 def main():
     parser = argparse.ArgumentParser(description="Image-classification Baseline Training")
     parser.add_argument(
-        "--config_file", default="../configs/baseline-resnet50-pim.yml", help="path to config file", type=str
+        "--config_file", default="../configs/baseline-resnet50-fpn.yml", help="path to config file", type=str
     )
     parser.add_argument("opts", help="Modify config options using the command-line", default=None,
                         nargs=argparse.REMAINDER)
@@ -126,3 +126,37 @@ def main():
 if __name__ == '__main__':
     seed_everything()
     main()
+# domain num is : -1
+# domain num is : -1
+# domain num is : -1
+# domain num is : -1
+#  domain num is : -1
+# class num is : 200
+# domain num is : -1
+# 2026-02-28 14:43:33,628 fine_grained.train INFO: Start training
+# 2026-02-28 14:43:46,474 fine_grained.train INFO: Epoch[1] Iteration[20/2997] Loss: 5.467, Acc: 0.000, Base Lr: 3.50e-06
+# 2026-02-28 14:43:53,202 fine_grained.train INFO: Epoch[1] Iteration[40/2997] Loss: 5.419, Acc: 0.000, Base Lr: 3.50e-06
+# 2026-02-28 14:43:59,949 fine_grained.train INFO: Epoch[1] Iteration[60/2997] Loss: 5.381, Acc: 0.000, Base Lr: 3.50e-06
+# 2026-02-28 14:44:06,674 fine_grained.train INFO: Epoch[1] Iteration[80/2997] Loss: 5.345, Acc: 0.009, Base Lr: 3.50e-06
+# 2026-02-28 14:44:13,403 fine_grained.train INFO: Epoch[1] Iteration[100/2997] Loss: 5.336, Acc: 0.006, Base Lr: 3.50e-06
+# 2026-02-28 14:44:20,119 fine_grained.train INFO: Epoch[1] Iteration[120/2997] Loss: 5.339, Acc: 0.004, Base Lr: 3.50e-06
+# 2026-02-28 14:44:26,905 fine_grained.train INFO: Epoch[1] Iteration[140/2997] Loss: 5.330, Acc: 0.003, Base Lr: 3.50e-06
+# 2026-02-28 14:44:33,673 fine_grained.train INFO: Epoch[1] Iteration[160/2997] Loss: 5.306, Acc: 0.002, Base Lr: 3.50e-06
+# 2026-02-28 14:44:40,550 fine_grained.train INFO: Epoch[1] Iteration[180/2997] Loss: 5.315, Acc: 0.001, Base Lr: 3.50e-06
+# 2026-02-28 14:44:47,310 fine_grained.train INFO: Epoch[1] Iteration[200/2997] Loss: 5.310, Acc: 0.001, Base Lr: 3.50e-06
+# 2026-02-28 14:44:54,051 fine_grained.train INFO: Epoch[1] Iteration[220/2997] Loss: 5.315, Acc: 0.010, Base Lr: 3.50e-06
+# 2026-02-28 14:45:00,771 fine_grained.train INFO: Epoch[1] Iteration[240/2997] Loss: 5.306, Acc: 0.007, Base Lr: 3.50e-06
+# 2026-02-28 14:45:07,521 fine_grained.train INFO: Epoch[1] Iteration[260/2997] Loss: 5.297, Acc: 0.014, Base Lr: 3.50e-06
+# 2026-02-28 14:45:14,253 fine_grained.train INFO: Epoch[1] Iteration[280/2997] Loss: 5.305, Acc: 0.016, Base Lr: 3.50e-06
+# 2026-02-28 14:45:20,991 fine_grained.train INFO: Epoch[1] Iteration[300/2997] Loss: 5.305, Acc: 0.021, Base Lr: 3.50e-06
+# 2026-02-28 14:45:27,727 fine_grained.train INFO: Epoch[1] Iteration[320/2997] Loss: 5.295, Acc: 0.014, Base Lr: 3.50e-06
+# 2026-02-28 14:45:34,482 fine_grained.train INFO: Epoch[1] Iteration[340/2997] Loss: 5.292, Acc: 0.009, Base Lr: 3.50e-06
+# 2026-02-28 14:45:41,259 fine_grained.train INFO: Epoch[1] Iteration[360/2997] Loss: 5.309, Acc: 0.006, Base Lr: 3.50e-06
+# 2026-02-28 14:45:48,054 fine_grained.train INFO: Epoch[1] Iteration[380/2997] Loss: 5.325, Acc: 0.004, Base Lr: 3.50e-06
+# 2026-02-28 14:45:54,789 fine_grained.train INFO: Epoch[1] Iteration[400/2997] Loss: 5.345, Acc: 0.003, Base Lr: 3.50e-06
+# 2026-02-28 14:46:01,522 fine_grained.train INFO: Epoch[1] Iteration[420/2997] Loss: 5.329, Acc: 0.002, Base Lr: 3.50e-06
+# 2026-02-28 14:46:08,272 fine_grained.train INFO: Epoch[1] Iteration[440/2997] Loss: 5.313, Acc: 0.001, Base Lr: 3.50e-06
+# 2026-02-28 14:46:15,012 fine_grained.train INFO: Epoch[1] Iteration[460/2997] Loss: 5.322, Acc: 0.001, Base Lr: 3.50e-06
+# 2026-02-28 14:46:21,788 fine_grained.train INFO: Epoch[1] Iteration[480/2997] Loss: 5.327, Acc: 0.001, Base Lr: 3.50e-06
+# 2026-02-28 14:46:28,537 fine_grained.train INFO: Epoch[1] Iteration[500/2997] Loss: 5.315, Acc: 0.000, Base Lr: 3.50e-06
+# 2026-02-28 14:46:35,301 fine_grained.train INFO: Epoch[1] Iteration[520/2997] Loss: 5.319, Acc: 0.000, Base Lr: 3.50e-06
