@@ -12,21 +12,10 @@ from ignite.engine import Engine, Events
 from ignite.handlers import ModelCheckpoint, Timer
 from ignite.metrics import RunningAverage
 
-from utils.cls_metric import ClsMetric
+from utils.cls_metric import ClassificationMetric
 
 global ITER
 ITER = 0
-
-
-def _infer_teacher(ims_tensor, teacher_model):
-    out = teacher_model(ims_tensor)
-    num_regs = teacher_model.config.num_register_tokens
-    patch_flat = out.last_hidden_state[:, 1 + num_regs:, :]  # 1 class token + 4 register tokens + num patch tokens
-    _, nb, _ = patch_flat.shape
-    nh = nw = int(nb ** 0.5)
-    pool_out = out.pooler_output
-    fea = patch_flat.view(len(ims_tensor), nh, nw, 384).permute(0, 3, 1, 2)  # B P C->B H W C ->B C H W
-    return fea, pool_out
 
 
 def _distillation(stu_fea, tea_fea):
@@ -69,10 +58,7 @@ def create_supervised_trainer(model, optimizer, loss_fn,
 
         score, stu_feat = model(img)
         loss = loss_fn(score, target)
-        if teacher_model:
-            with torch.inference_mode():
-                tea_fea, fea_cls = _infer_teacher(img, teacher_model)
-            loss = .5 * loss + .5 * _distillation(stu_feat, tea_fea)
+
         loss.backward()
         optimizer.step()
         # compute acc
@@ -127,24 +113,22 @@ def do_train(
         optimizer,
         scheduler,
         loss_fn,
-        num_query,
         start_epoch,
-        teacher_model
+        arguments
 ):
     log_period = cfg.SOLVER.LOG_PERIOD
-    checkpoint_period = cfg.SOLVER.CHECKPOINT_PERIOD
     eval_period = cfg.SOLVER.EVAL_PERIOD
     output_dir = cfg.OUTPUT_DIR
     device = cfg.MODEL.DEVICE
     epochs = cfg.SOLVER.MAX_EPOCHS
 
     logger = logging.getLogger("fine_grained.train")
-    # logger = logging.getLogger("reid_baseline.train")
     logger.info("Start training")
-    trainer = create_supervised_trainer(model, optimizer, loss_fn, teacher_model, device=device)
+
+    trainer = create_supervised_trainer(model, optimizer, loss_fn, arguments, device=device)
     evaluator = create_supervised_evaluator(model, metrics={
         # 'r1_mAP': R1_mAP(num_query, max_rank=50, feat_norm=cfg.TEST.FEAT_NORM),
-        'top_k': ClsMetric(),
+        'top_k': ClassificationMetric(),
         # 'precision': Precision(average=True),
         # 'recall': Recall(average=True),
         # 'loss': Loss(loss_fn)  # criterion为损失函数
@@ -200,10 +184,10 @@ def do_train(
     def log_validation_results(engine):
         if engine.state.epoch % eval_period == 0:
             evaluator.run(val_loader)
-            top_1, top_2, top_3 = evaluator.state.metrics['top_k']
+            top_1, top_3, top_5 = evaluator.state.metrics['top_k']
             logger.info("Validation Results - Epoch: {}".format(engine.state.epoch))
-            logger.info("top_1: {:.2%}".format(top_1))
-            logger.info("top_2: {:.2%}".format(top_2))
-            logger.info("top_3: {:.2%}".format(top_3))
+            logger.info("top_1 Acc.: {:.2%}".format(top_1))
+            logger.info("top_3 Acc.: {:.2%}".format(top_3))
+            logger.info("top_5 Acc.: {:.2%}".format(top_5))
 
     trainer.run(train_loader, max_epochs=epochs)

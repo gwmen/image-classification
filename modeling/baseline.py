@@ -5,12 +5,10 @@
 
 import torch
 from torch import nn
-from torchvision.models.feature_extraction import get_graph_node_names
+# from torchvision.models.feature_extraction import get_graph_node_names
 from torchvision.models.feature_extraction import create_feature_extractor
 from .backbones.models import create_model
-from .plugin.pim_module import PluginModel
-from .plugin.common_module import ClassificationModel
-from .plugin.fpn_module import FPNClassificationModel
+from .plugin.base_module import BaseClassification
 
 NODES = {
     'resnet50':
@@ -36,58 +34,25 @@ NODES = {
         }
 }
 
+HEADERS = {
+    'base': BaseClassification,
+}
+
 
 class Baseline(nn.Module):
 
-    def __init__(self, num_classes, num_domain, last_stride, model_path, neck, clip_id, in_planes, neck_feat,
-                 model_name, cfg):
+    def __init__(self, model_name, head, num_classes, arguments=None):
         super(Baseline, self).__init__()
         backbone = create_model(model_name)
         return_nodes = NODES[model_name]
         in_planes = backbone.fc.in_features
-        feature_extractor = create_feature_extractor(backbone, return_nodes=return_nodes)
-        if cfg.PLUG_MODEL.ENABLE:
-            num_selects = dict()
-            [num_selects.update({layer_name: select_size}) for layer_name, select_size
-             in zip(cfg.PLUG_MODEL.NUM_SELECTS_NAME, cfg.PLUG_MODEL.NUM_SELECTS_SIZE)]
-            self.shell_extractor = PluginModel(feature_extractor,
-                                               return_nodes=return_nodes,
-                                               img_size=cfg.INPUT.SIZE_TRAIN[0],
-                                               use_fpn=cfg.PLUG_MODEL.USE_FPN,
-                                               fpn_size=cfg.PLUG_MODEL.FPN_SIZE,
-                                               proj_type=cfg.PLUG_MODEL.PROJ_TYPE,
-                                               upsample_type=cfg.PLUG_MODEL.UP_SAMPLE_TYPE,
-                                               use_selection=True,
-                                               num_classes=num_classes,
-                                               num_selects=num_selects,
-                                               use_combiner=True,
-                                               comb_proj_size=None)
-        else:
-            if False:
-                self.shell_extractor = ClassificationModel(feature_extractor, in_planes=in_planes,
-                                                           num_classes=num_classes)
-            else:
-                num_selects = dict()
-                [num_selects.update({layer_name: select_size}) for layer_name, select_size
-                 in zip(cfg.PLUG_MODEL.NUM_SELECTS_NAME, cfg.PLUG_MODEL.NUM_SELECTS_SIZE)]
-                self.shell_extractor = FPNClassificationModel(feature_extractor,
-                                                              return_nodes=return_nodes,
-                                                              img_size=cfg.INPUT.SIZE_TRAIN[0],
-                                                              use_fpn=cfg.PLUG_MODEL.USE_FPN,
-                                                              fpn_size=cfg.PLUG_MODEL.FPN_SIZE,
-                                                              proj_type=cfg.PLUG_MODEL.PROJ_TYPE,
-                                                              upsample_type=cfg.PLUG_MODEL.UP_SAMPLE_TYPE,
-                                                              use_selection=True,
-                                                              num_classes=num_classes,
-                                                              num_selects=num_selects,
-                                                              use_combiner=True,
-                                                              comb_proj_size=None,
-                                                              in_planes=in_planes
-                                                              )
+        self.extractor = create_feature_extractor(backbone, return_nodes=return_nodes)
+        self.header = HEADERS[head](in_planes=in_planes, num_classes=num_classes)
 
     def forward(self, x):
-        out = self.shell_extractor(x)
-        return out, None  # student feature for distill
+        feature = self.extractor(x)
+        out = self.header(feature)
+        return out, None
 
     def load_param(self, trained_path):
         param_dict = torch.load(trained_path)['model']

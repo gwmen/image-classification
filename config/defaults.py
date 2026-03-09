@@ -23,13 +23,16 @@ _C.MODEL.DEVICE = "cuda"
 _C.MODEL.DEVICE_ID = '0'
 # Name of backbone
 _C.MODEL.NAME = 'resnet50'
+_C.MODEL.HEAD = 'base'
 # Last stride of backbone
 _C.MODEL.LAST_STRIDE = 1
 # Path to pretrained model of backbone
 _C.MODEL.PRETRAIN_PATH = ''
+_C.MODEL.RESUME_PATH = ''
 # Use ImageNet pretrained model to initialize backbone or use self trained model to initialize the whole model
 # Options: 'imagenet' or 'self'
-_C.MODEL.PRETRAIN_CHOICE = 'imagenet'
+# _C.MODEL.PRETRAIN_CHOICE = 'imagenet'
+_C.MODEL.IMAGENET_PRETRAINED = 'yes'
 # If train with BNNeck, options: 'bnneck' or 'no'
 _C.MODEL.NECK = 'bnneck'
 # If train loss include center loss, options: 'yes' or 'no'. Loss with center loss has different optimizer configuration
@@ -37,11 +40,13 @@ _C.MODEL.IF_WITH_CENTER = 'no'
 # The loss type of metric loss
 # options:['triplet'](without center loss) or ['center','triplet_center'](with center loss)
 _C.MODEL.METRIC_LOSS_TYPE = 'softmax'
+#   #  'focal-loss' 'softmax'
 # For example, if loss type is cross entropy loss + triplet loss + center loss
 # the setting should be: _C.MODEL.METRIC_LOSS_TYPE = 'triplet_center' and _C.MODEL.IF_WITH_CENTER = 'yes'
 
 # If train with label smooth, options: 'on', 'off'
 _C.MODEL.IF_LABELSMOOTH = 'on'
+_C.MODEL.LABEL_SMOOTH = False
 _C.MODEL.CLIP_ID = None
 _C.MODEL.IN_PLANES = None
 
@@ -50,31 +55,34 @@ _C.MODEL.IN_PLANES = None
 _C.MODEL.TEACHER = ''
 _C.MODEL.AGG = False  # Aggregation
 # -----------------------------------------------------------------------------
-# PLUG_MODEL
-_C.PLUG_MODEL = CN()
-_C.PLUG_MODEL.ENABLE = False
-_C.PLUG_MODEL.USE_FPN = True
-_C.PLUG_MODEL.FPN_SIZE = 1536
-_C.PLUG_MODEL.USE_SELECTION = True
-_C.PLUG_MODEL.NUM_SELECTS_NAME = ['layer1', 'layer2', 'layer3', 'layer4']
-# 224, 2048/3136(56x56),r = 0.65
-# _C.PLUG_MODEL.NUM_SELECTS_SIZE = [2048, 512, 128, 32]
-_C.PLUG_MODEL.NUM_SELECTS_SIZE = [6144, 1536, 384, 96]
-_C.PLUG_MODEL.USE_COMBINER = True
-_C.PLUG_MODEL.LAMBDA_B = 0.1
-_C.PLUG_MODEL.LAMBDA_S = 1.5
-_C.PLUG_MODEL.LAMBDA_N = 0.5
-_C.PLUG_MODEL.LAMBDA_C = 1.5
-_C.PLUG_MODEL.PROJ_TYPE = "Conv"
-_C.PLUG_MODEL.UP_SAMPLE_TYPE = "Bilinear"
+# # PLUG_MODEL
+# _C.PLUG_MODEL = CN()
+# _C.PLUG_MODEL.ENABLE = False
+# _C.PLUG_MODEL.USE_FPN = True
+# _C.PLUG_MODEL.FPN_SIZE = 1536
+# _C.PLUG_MODEL.USE_SELECTION = True
+# _C.PLUG_MODEL.NUM_SELECTS_NAME = ['layer1', 'layer2', 'layer3', 'layer4']
+# # 224, 2048/3136(56x56),r = 0.65
+# # _C.PLUG_MODEL.NUM_SELECTS_SIZE = [2048, 512, 128, 32]
+# _C.PLUG_MODEL.NUM_SELECTS_SIZE = [6144, 1536, 384, 96]
+# _C.PLUG_MODEL.USE_COMBINER = True
+# _C.PLUG_MODEL.LAMBDA_B = 0.1
+# _C.PLUG_MODEL.LAMBDA_S = 1.5
+# _C.PLUG_MODEL.LAMBDA_N = 0.5
+# _C.PLUG_MODEL.LAMBDA_C = 1.5
+# _C.PLUG_MODEL.PROJ_TYPE = "Conv"
+# _C.PLUG_MODEL.UP_SAMPLE_TYPE = "Bilinear"
+#
+
 # -----------------------------------------------------------------------------
 # INPUT
 # -----------------------------------------------------------------------------
 _C.INPUT = CN()
+_C.INPUT.SIZE_RESIZE = 510
 # Size of the image during training
-_C.INPUT.SIZE_TRAIN = [224, 224]
+_C.INPUT.SIZE_TRAIN = 224
 # Size of the image during test
-_C.INPUT.SIZE_TEST = [224, 224]
+_C.INPUT.SIZE_TEST = 224
 # Random probability for image horizontal flip
 _C.INPUT.PROB = 0.5
 # Random probability for random erasing
@@ -85,26 +93,31 @@ _C.INPUT.PIXEL_MEAN = [0.485, 0.456, 0.406]
 _C.INPUT.PIXEL_STD = [0.229, 0.224, 0.225]
 # Value of padding size
 _C.INPUT.PADDING = 10
-
+_C.INPUT.DATASET = 'cub_200_2011'
+_C.INPUT.ROOT_DIR = './../../dataset'
+_C.INPUT.TRAIN_BATCH = 4
+_C.INPUT.TEST_BATCH = 4
+_C.INPUT.NUM_INSTANCE = 4
+_C.INPUT.NUM_WORKERS = 4
 # -----------------------------------------------------------------------------
 # Dataset
 # -----------------------------------------------------------------------------
-_C.DATASETS = CN()
-# List of the dataset names for training, as present in paths_catalog.py
-_C.DATASETS.NAMES = []
-# Root directory where datasets should be used (and downloaded if not found)
-_C.DATASETS.ROOT_DIR = ('./data')
+# _C.DATASETS = CN()
+# # List of the dataset names for training, as present in paths_catalog.py
+# _C.DATASETS.NAMES = []
+# # Root directory where datasets should be used (and downloaded if not found)
+# _C.DATASETS.ROOT_DIR = ('./data')
 
 # -----------------------------------------------------------------------------
 # DataLoader
 # -----------------------------------------------------------------------------
-_C.DATALOADER = CN()
-# Number of data loading threads
-_C.DATALOADER.NUM_WORKERS = 8
-# Sampler for data loading
-# _C.DATALOADER.SAMPLER = 'softmax'
-# Number of instance for one batch
-_C.DATALOADER.NUM_INSTANCE = 16
+# _C.DATALOADER = CN()
+# # Number of data loading threads
+# _C.DATALOADER.NUM_WORKERS = -1
+# # Sampler for data loading
+# # _C.DATALOADER.SAMPLER = 'softmax'
+# # Number of instance for one batch
+# _C.DATALOADER.NUM_INSTANCE = -1
 
 # ---------------------------------------------------------------------------- #
 # Solver

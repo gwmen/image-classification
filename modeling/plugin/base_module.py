@@ -2,10 +2,9 @@ import torch
 from torch import nn
 
 
-class ClassificationModel(nn.Module):
-    def __init__(self, backbone: torch.nn.Module, in_planes: int, num_classes: int):
-        super(ClassificationModel, self).__init__()
-        self.feature_extractor = backbone
+class BaseClassification(nn.Module):
+    def __init__(self, in_planes: int, num_classes: int):
+        super(BaseClassification, self).__init__()
         self.gap = nn.AdaptiveAvgPool2d(1)
         self.num_classes = num_classes
         self.in_planes = in_planes
@@ -13,9 +12,7 @@ class ClassificationModel(nn.Module):
             nn.Linear(self.in_planes, self.num_classes)
         )
 
-    def forward(self, x):
-        extract_features = self.feature_extractor(x)
-
+    def forward(self, extract_features: dict):
         last_fea = extract_features['layer4']
         gap_fea = self.gap(last_fea)  # (b, 2048, 1, 1)
         reshape_fea = gap_fea.view(gap_fea.shape[0], -1)  # flatten to (bs, 2048)

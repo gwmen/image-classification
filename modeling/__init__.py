@@ -9,13 +9,8 @@ from .teacher_model import get_dino_v3
 
 
 def build_model(cfg, num_classes, num_domain=-1):
-    # if cfg.MODEL.NAME == 'resnet50':
-    #     model = Baseline(num_classes, cfg.MODEL.LAST_STRIDE,
-    #     cfg.MODEL.PRETRAIN_PATH, cfg.MODEL.NECK, cfg.TEST.NECK_FEAT)
-    model = Baseline(num_classes, num_domain,
-                     cfg.MODEL.LAST_STRIDE, cfg.MODEL.PRETRAIN_PATH,
-                     cfg.MODEL.NECK, cfg.MODEL.CLIP_ID, cfg.MODEL.IN_PLANES,
-                     cfg.TEST.NECK_FEAT, cfg.MODEL.NAME, cfg)
+    arguments = {}
+    model = Baseline(cfg.MODEL.NAME, cfg.MODEL.HEAD, num_classes)
     return model
 
 
